@@ -1,0 +1,54 @@
+<div>
+  <img [src]="event?.imageUrl" [alt]="event?.name" class="myImageClass">
+
+  <div class="row">
+    <div class="col-md-11">
+      <h2>{{event?.name | uppercase}} </h2>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div><strong>Date:</strong> {{event?.date | date:'short'}}</div>
+      <div><strong>Time:</strong> {{event?.time}}</div>
+      <div><strong>Price:</strong> {{event?.price | currency:'USD':true}}</div>
+    </div>
+    <div class="col-md-6">
+      <address *ngIf="event?.location">
+        <strong>Address:</strong><br /> {{event?.location?.address}}
+        <br /> {{event?.location?.city}}, {{event?.location?.country}}
+      </address>
+      <address *ngIf="event?.onlineUrl">
+        <strong>OnlineUrl:</strong><br />
+        <a href={{event.onlineUrl}}>{{event.onlineUrl}}</a>
+      </address>
+    </div>
+  </div>
+
+  <hr>
+  <div class="row">
+    <div class="col-md-2">
+      <h3 style="margin:0"> Sessions</h3>
+    </div>
+    <div class="col-md-6" style="margin-bottom : 10px;">
+      <div class= "btn-group btn-group-sm" style = "margin-right: 20 px;">
+          <button class="btn btn-default" [ngClass]="{active : sortby === 'votes'}" (click)="sortby='votes'">By votes</button>
+        <button class="btn btn-default" [class.active]="sortby === 'name'" (click)="sortby='name'">By name</button>
+
+      </div>
+      <div class= "btn-group btn-group-sm">
+      <button class="btn btn-default" [ngClass]="{active : filterby === 'all'}" (click)="filterby='all'">All</button>
+      <button class="btn btn-default" [class.active]="filterby === 'beginner'" (click)="filterby='beginner'">Beginner</button>
+      <button class="btn btn-default" [class.active]="filterby === 'intermediate'" (click)="filterby='intermediate'">Intermediate</button>
+      <button class="btn btn-default" [class.active]="filterby === 'advanced'" (click)="filterby='advanced'">Advanced</button>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <a (click)="addSession()" modal-trigger="addSession" style="cursor:pointer">Add Session</a>
+    </div>
+  </div>
+  <session-list [sortby]= "sortby" [filterby] = "filterby" [sessions]="event.sessions"></session-list>
+</div>
+<simple-modal closeOnBodyClick="false"  elementId="addSession" title="Add Session">
+<create-session (saveNewSession)="addSessionToCurrentEvent($event)" *ngIf="addMode"></create-session>
+</simple-modal>
